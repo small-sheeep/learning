@@ -1,24 +1,23 @@
 #include<iostream>
 using namespace std;
-int judge(int num)//判断质数
+long judge(long num)//判断质数
 {
-	for (int i = num - 1; i > 1; i--)
+	for (long i = num - 1; i > 1; i--)
 	{
 		if (num % i == 0)
 		{
 			return 0; 
-			break;
 		}
 	}
 	return 1;
 }
-int factor(int num)//找出素数
+long factor(long num)//找出素数
 {
 	if (judge(num))
 		return num;
 	else
 	{
-		for (int i = num - 1; i > 1; i--)
+		for (long i = num - 1; i > 1; i--)
 		{
 			if (num % i == 0)
 			{
@@ -28,9 +27,9 @@ int factor(int num)//找出素数
 		}
 	}
 }
-void out(int num)//输出素数
+void out(long num)//输出素数
 {
-	int temp = factor(num);
+	long temp = factor(num);
 	if (temp != num)
 	{
 		cout << (num / temp) << "  ";
@@ -41,9 +40,9 @@ void out(int num)//输出素数
 		cout << num << endl;
 	}
 }
-int main()
+long main()
 {
-	int a;
+	long a;
 	cin >> a;
 	out(a);
 }
