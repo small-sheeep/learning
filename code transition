@@ -1,0 +1,46 @@
+#include<iostream>
+using namespace std;
+//编写一个简单加密程序。输入一个6位整数的明码，按以下方法进行加密:
+// 首先，将每位数字替成它与7相加之和再用10求模的结果;然后将其逆置;
+// 最后输出密码。再编写程序，把这个密码还原成码。若输入错误，则显示错误信息后退出程序。
+//例如，输入原码数据n为:200911，则显示密码n1为 : 886779，解密后的原码n2为 : 200911。
+//注 : 密码n1不一定是6位整数，但明码n和n2是相等的6位整数。
+int main() 
+{
+	int ming,s[6],mi,m[6],mm[6];
+	
+	cout << "请输入六位数明码：" << endl; cin >> ming;
+	for (int i = 0; i < 6; i++)
+	{
+		m[i] = ming % 10;
+		s[i] = (ming % 10 + 7) % 10;
+		ming /= 10;
+	}
+	cout << "密码为：" << endl;
+	for (int i = 0; i < 6; i++)
+	{
+		cout << s[i];
+	}
+	cout << endl;
+	cout << "请输入密码：" << endl; cin >> mi;
+	for (int j = 5; j >=0; j--)
+	{
+		mm[j] = (mi % 10+3)%10;
+		mi /= 10;
+	}
+	char* m1 = (char*) m;
+	char* mm1 = (char*)mm;
+	if ((strcmp(mm1, m1)) == 0)
+	{
+		cout << "密码正确,明码为：" << endl;
+		for (int k = 0; k < 6; k++)
+		{
+			cout << m[k];
+		}
+	}
+	else
+	{
+		cout << "密码错误，即将退出程序" << endl;
+		exit(0);
+	}
+}
