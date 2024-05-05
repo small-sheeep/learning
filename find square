@@ -12,11 +12,7 @@ void x(double num,double a)
 }
 int main()
 {
-	double a ,num;
+	double a;
 	cin >> a;
-	num = (a / 2 + a / (a / 2)) / 2;
-	if (abs(num - a) < 1e-3)
-		cout << num << endl;
-	else
-		x(num, a);
+	x(a, a);
 }
