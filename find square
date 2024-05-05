@@ -1,0 +1,22 @@
+#include<iostream>
+using namespace std;
+//使用迭代公式x n+1= (xn + a / xn ) / 2(n = 0, 1, 2…x0 = a / 2)编程求某个正整数a的平方根。
+void x(double num,double a)
+{
+	double b;
+	b = (num + a / num) / 2;
+	if (abs(b - num) < 1e-3)
+		cout << b << endl;
+	else
+		x(b, a);
+}
+int main()
+{
+	double a ,num;
+	cin >> a;
+	num = (a / 2 + a / (a / 2)) / 2;
+	if (abs(num - a) < 1e-3)
+		cout << num << endl;
+	else
+		x(num, a);
+}
