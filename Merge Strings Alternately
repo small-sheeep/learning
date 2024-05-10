@@ -1,0 +1,32 @@
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	string s1, s2 ,temp1,temp2;
+	cout << "please input the first word" << endl;
+	getline(cin, s1, '\n');
+	cout << "please input the second word" << endl;
+	getline(cin, s2, '\n');
+	int m = min(s1.size(), s2.size());
+	if (s1.size() > m)
+	{
+		for (int i = 1; i <= m; i++)
+		{
+			temp1 = s2.substr((i-1), 1);
+			s1 = s1.insert((i*2-1), temp1);
+		}
+		cout << s1 << endl;
+	}
+	else
+	{
+		for (int i = 1; i <= m; i++)
+		{
+			temp1 = s2.substr((i-1), 1);
+			s1 = s1.insert((i * 2 - 1), temp1);
+		}
+		temp2 = s2.substr(m);
+		s1 += temp2;
+		cout << s1 << endl;
+	}
+}
