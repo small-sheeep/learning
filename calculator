@@ -1,0 +1,120 @@
+#include<iostream>
+#include<string>
+using namespace std;
+class calculator 
+{
+public:
+	void input()
+	{
+		string s1;
+		getline(cin, s1, '\n');
+		if (s1.size() == 0)
+		{
+			cout << "Cannot input empty arithmetic expressions" << endl;//防止输入空的运算式
+			exit(0);
+		}
+		Arithmetic = s1;
+	}
+	void ext()
+	{
+		string Ari = Arithmetic;
+		int n = 0;
+		string symbol = "+-*/%" ;
+		for (int i = 0; i < Ari.size(); i++)
+		{
+			string tempAri = Ari.substr(i, 1);
+			for (int k = 0; k < 5; k++)
+			{
+				string tempsym1 = symbol.substr(k, 1);
+				if (tempAri == tempsym1)
+				{
+					if (i == 0)
+					{
+						cout << "Error: Operator cannot be written at the beginning" << endl;//运算符写在开头的错误处理
+						exit(0);
+					}
+					if (i == (Ari.size() - 1))
+					{
+						cout << "Error: Operators cannot be written at the end" << endl;//运算符写在末尾的错误处理
+						exit(0);
+					}
+					n += 1;
+					syms = tempsym1;
+					string symt1(Ari, 0, i);
+					string symt2(Ari, i+1, (Ari.size() - (i + 1)));
+					sym1 = symt1;
+					sym2 = symt2;
+				}
+			}
+		}
+		if (n > 1)
+		{
+			cout << "Cannot input multiple operators" << endl;
+			exit(0);
+		}
+	}
+	void fac()
+	{
+		num1 = stod(sym1); num2 = stod(sym2);
+		string symbol = "+-*/%" ;
+		for (int i = 0; i < 5; i++)
+		{
+			string tempsym2 = symbol.substr(i, 1);
+			if (syms == tempsym2)
+			{
+				symi = i;
+			}
+		}
+	}
+	void swi()
+	{
+		switch (symi)
+		{
+		case 0:add(num1, num2); break;
+		case 1:sub(num1, num2); break;
+		case 2:mul(num1, num2); break;
+		case 3:div(num1, num2); break;
+		case 4:mod(num1, num2);
+		}
+	}
+	void add(double num1, double num2)
+	{
+		cout << "The result is:"<<'\t' << num1 + num2 << endl;
+	};
+	void sub(double num1, double num2)
+	{
+		cout << "The result is:" << '\t' << num1 - num2 << endl;
+	};
+	void mul(double num1, double num2)
+	{
+		cout << "The result is:" << '\t' << num1 * num2 << endl;
+	};
+	void div(double num1, double num2)
+	{
+		if (num2 == 0)
+		{
+			cout << "Error: Divisor cannot be zero!" << endl;
+			return;
+		}
+		cout << "The result is:" << '\t' << num1 / num2 << endl;
+	};
+	void mod(double num1, double num2) {
+		if (num2 == 0) 
+		{
+			cout << "Error: Divisor cannot be zero!" << endl;
+			return;
+		}
+		cout << "The result is:" << '\t' << fmod(num1, num2) << endl;
+	}
+private:
+	double num1 = 0, num2 = 0;int symi = 0;
+	string Arithmetic,syms,sym1,sym2;
+};
+int main()
+{
+	calculator try1;
+	try1.input();
+	try1.ext();
+	try1.fac();
+	try1.swi();
+}
