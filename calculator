@@ -1,120 +1,198 @@
+//这是一个能实现加减乘除取模指数括号的多项计算器,暂支持整数
 #include<iostream>
 #include<string>
+#include<math.h>
+#define maxsize 100
 using namespace std;
-class calculator 
+typedef struct
 {
-public:
-	void input()
-	{
-		string s1;
-		getline(cin, s1, '\n');
-		if (s1.size() == 0)
-		{
-			cout << "Cannot input empty arithmetic expressions" << endl;//防止输入空的运算式
-			exit(0);
-		}
-		Arithmetic = s1;
-	}
-	void ext()
-	{
-		string Ari = Arithmetic;
-		int n = 0;
-		string symbol = "+-*/%" ;
-		for (int i = 0; i < Ari.size(); i++)
-		{
-			string tempAri = Ari.substr(i, 1);
-			for (int k = 0; k < 5; k++)
-			{
-				string tempsym1 = symbol.substr(k, 1);
-				if (tempAri == tempsym1)
-				{
-					if (i == 0)
-					{
-						cout << "Error: Operator cannot be written at the beginning" << endl;//运算符写在开头的错误处理
-						exit(0);
-					}
-					if (i == (Ari.size() - 1))
-					{
-						cout << "Error: Operators cannot be written at the end" << endl;//运算符写在末尾的错误处理
-						exit(0);
-					}
-					n += 1;
-					syms = tempsym1;
-					string symt1(Ari, 0, i);
-					string symt2(Ari, i+1, (Ari.size() - (i + 1)));
-					sym1 = symt1;
-					sym2 = symt2;
-				}
-			}
-		}
-		if (n > 1)
-		{
-			cout << "Cannot input multiple operators" << endl;
-			exit(0);
-		}
-	}
-	void fac()
-	{
-		num1 = stod(sym1); num2 = stod(sym2);
-		string symbol = "+-*/%" ;
-		for (int i = 0; i < 5; i++)
-		{
-			string tempsym2 = symbol.substr(i, 1);
-			if (syms == tempsym2)
-			{
-				symi = i;
-			}
-		}
-	}
-	void swi()
-	{
-		switch (symi)
-		{
-		case 0:add(num1, num2); break;
-		case 1:sub(num1, num2); break;
-		case 2:mul(num1, num2); break;
-		case 3:div(num1, num2); break;
-		case 4:mod(num1, num2);
-		}
-	}
-	void add(double num1, double num2)
-	{
-		cout << "The result is:"<<'\t' << num1 + num2 << endl;
-	};
-	void sub(double num1, double num2)
-	{
-		cout << "The result is:" << '\t' << num1 - num2 << endl;
-	};
-	void mul(double num1, double num2)
-	{
-		cout << "The result is:" << '\t' << num1 * num2 << endl;
-	};
-	void div(double num1, double num2)
-	{
-		if (num2 == 0)
-		{
-			cout << "Error: Divisor cannot be zero!" << endl;
-			return;
-		}
-		cout << "The result is:" << '\t' << num1 / num2 << endl;
-	};
-	void mod(double num1, double num2) {
-		if (num2 == 0) 
-		{
-			cout << "Error: Divisor cannot be zero!" << endl;
-			return;
-		}
-		cout << "The result is:" << '\t' << fmod(num1, num2) << endl;
-	}
-private:
-	double num1 = 0, num2 = 0;int symi = 0;
-	string Arithmetic,syms,sym1,sym2;
-};
+	int datastr[maxsize];
+	int top;
+}stack;
+//分配内存空间
+stack* Createstack()
+{
+    stack* p;
+    p = (stack*)malloc(sizeof(*p));
+    if (p == NULL)
+    {
+        exit(0);
+    }
+    p->top = -1;
+    return p;
+}
+//压栈
+int push(stack* p,int x )
+{
+    if ((p->top) == maxsize - 1)
+    {
+        exit(0);
+    }
+    p->top++;
+    p->datastr[p->top] = x;
+    cout << x << endl;
+    return 0;
+}
+//出栈
+int pop(stack* p, int* x)
+{
+    if (p->top == -1)
+    {
+        return -1;
+    }
+    *x = p->datastr[p->top];
+    p->top--;
+    return 0;
+}
+//栈顶
+int top(stack* p, int* x)
+{
+    if (p->top == -1)
+    {
+        return -1;
+    }
+    *x = p->datastr[p->top];
+    return 0;
+}
+//判断栈是否为空
+int Empty(stack* p)
+{
+    return (p->top == -1);
+}
+//定义符号的优先级
+int Priority(int ope)
+{
+    switch(ope)
+    {
+        case '(':   return 0; break; //左括号已经在栈内时，如果比较，其优先级最低
+        case '+':   
+        case '-':   return 1; break;
+        case '*':
+        case '%':
+        case '/':   return 2; break;
+        case '^':   return 3; break;
+        default:    return -1; break;
+    }
+}
+//将两数出栈，用ope计算，并压栈
+void calculation(stack* num, int ope)//计算方法
+{
+    int num1, num2,n=0;
+    pop(num, &num2);
+    pop(num, &num1);
+    switch (ope)
+    {
+    case '+':   n = num1 + num2; break;
+    case '-':   n = num1 - num2; break;
+    case '*':   n = num1 * num2; break;
+    case '/':   n = num1 / num2; break;
+    case '%':   n = num1 % num2; break;
+    case '^':   n = pow(num1, num2); break;
+    }
+    push(num, n);
+}
+//处理除右括号外的符号
+void Deal_ope(stack* num, stack* ope, int nowope)
+{
+    int oldope;
+    if (Empty(ope) || nowope == '(')
+    {
+        push(ope, nowope);//直接存入符号栈
+        return;
+    }
+    top(ope, &oldope);
+    if (Priority(nowope) > Priority(oldope))//比较符号优先级
+    {
+        push(ope, nowope);
+        return;
+    }
+    while (Priority(nowope) <= Priority(oldope))//取栈中符号计算
+    {
+        pop(ope, &oldope);
+        calculation(num, oldope);
+        if (Empty(ope))
+        {
+            break;
+        }
+        top(ope, &oldope);
+    }
+    push(ope, nowope);
+}
+//处理右括号
+void Deal_right(stack* num, stack* ope)
+{
+    int old_ope;
+    top(ope, &old_ope);
+    while (old_ope != '(')
+    {
+        //当前符号出栈然后将数字出栈两个进行计算,在括号内优先级最高
+        pop(ope, &old_ope);
+        calculation(num, old_ope);
+        //循环
+        top(ope, &old_ope);
+    }
+    pop(ope, &old_ope);//出现左括号时将它丢弃
+    old_ope = 0;
+}
+//写入并读取表达式
+void Readexpression(char a[])
+{
+    char x[maxsize];
+    int i = 0, j = 0;
+    gets_s(x);
+    for (i = 0; x[i] != '\0'; i++)
+    {
+        a[j] = x[i];
+        j++;
+    }
+    a[j] = '\0';
+}
 int main()
 {
-	calculator try1;
-	try1.input();
-	try1.ext();
-	try1.fac();
-	try1.swi();
+    char str[maxsize];
+    Readexpression(str);
+    int i = 0, value = 0, flag = 0;   //数字的值
+    int old_ope;
+    stack* numstack, * opestack;
+    numstack = Createstack();
+    opestack = Createstack();  
+    while (str[i] != '\0')
+    {
+        if (str[i] >= '0' && str[i] <= '9')
+        {
+            value *= 10;        //数字的获取，注意可能不止一位
+            value += str[i] - '0';
+            flag = 1;
+        }
+        else
+        {
+            if (flag)   //flag = 1说明value里面存储了数字，将其入栈
+            {
+                push(numstack, value);
+                //flag标志清零，value存放数字的变量清零
+                flag = 0;
+                value = 0;
+            }
+            if (str[i] == ')')
+            {
+                Deal_right(numstack, opestack);
+            }
+            else
+            {
+                Deal_ope(numstack, opestack, str[i]);
+            }
+        }
+        i++;
+    }
+    if (flag)   //如果flag = 1.说明value里面还有数值,将其入栈
+    {
+        push(numstack, value);
+    }
+    while (!Empty(opestack))  //如果符号栈不为空，继续计算
+    {
+        pop(opestack, &old_ope);
+        calculation(numstack, old_ope);
+    }
+    pop(numstack, &value); //最终答案
+    cout <<"此运算结果="<<" " << value << endl;
 }
