@@ -30,7 +30,6 @@ int push(stack* p,int x )
     }
     p->top++;
     p->datastr[p->top] = x;
-    cout << x << endl;
     return 0;
 }
 //出栈
